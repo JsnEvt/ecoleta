@@ -1,0 +1,9 @@
+A pasta E-Coleta-JS-Busca contém os arquivos 
+JavaScript do mecanismo de busca da página, inclusive
+arquivos da página em html.
+
+As pastas server e web contém os arquivos
+complementares de criação dos pontos de coleta.
+Esses, foram feitos com o React/Knex.
+
+Todos se complementam.
