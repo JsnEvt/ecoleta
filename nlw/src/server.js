@@ -95,36 +95,63 @@ server.post("/savepoint", (req, res) => {
 
 
 
-server.get("/search", (req, res) => {
+// server.get("/search", (req, res) => {
 
+//     const search = req.query.search
+
+//     if (search == "") {
+//         // pesquisa vazia
+//         return res.render("search-results.html", {
+//             total: 0
+//         })
+
+//     }
+
+//     // Pegar os dados do banco de dados
+//     // LIKE fará com que se pegue no banco de dados todos os cadastros com uma palavra em cumum, antes e depois da palavra 
+//     // Ex: sul, vai buscar as citys: Rio do sul, Chapadão do sul entre outras se estiver cadastrados 
+//     db.all(`SELECT * FROM places WHERE city LIKE '%${search}%'`, function (err, rows) {
+//         if (err) {
+//             return console.log(err)
+//         }
+
+//         // Conta quantos objetos são pegos do banco de dados
+//         const total = rows.length
+
+//         // Mostrar a página html com os dados pegos do banco de dados
+//         return res.render("search-results.html", {
+//             places: rows,
+//             total: total
+//         })
+//     })
+// })
+
+server.get("/search", (req, res) => {
     const search = req.query.search
 
-    if (search == "") {
-        // pesquisa vazia
-        return res.render("search-results.html", {
-            total: 0
-        })
-
+    // Se o campo estiver vazio, retorna todos os registros
+    let query
+    if (!search || search.trim() === "") {
+        query = `SELECT * FROM places`
+    } else {
+        query = `SELECT * FROM places WHERE city LIKE ?`
     }
 
-    // Pegar os dados do banco de dados
-    // LIKE fará com que se pegue no banco de dados todos os cadastros com uma palavra em cumum, antes e depois da palavra 
-    // Ex: sul, vai buscar as citys: Rio do sul, Chapadão do sul entre outras se estiver cadastrados 
-    db.all(`SELECT * FROM places WHERE city LIKE '%${search}%'`, function (err, rows) {
+    // Passa o parâmetro de forma segura para evitar SQL Injection
+    const params = (!search || search.trim() === "") ? [] : [`%${search}%`]
+
+    db.all(query, params, function (err, rows) {
         if (err) {
             return console.log(err)
         }
 
-        // Conta quantos objetos são pegos do banco de dados
         const total = rows.length
 
-        // Mostrar a página html com os dados pegos do banco de dados
         return res.render("search-results.html", {
             places: rows,
-            total: total
+            total: total,
         })
     })
-
 })
 
 
