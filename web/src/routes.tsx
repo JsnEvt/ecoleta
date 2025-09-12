@@ -5,11 +5,11 @@ import Home from './pages/Home/Index'
 import CreatePoint from './pages/CreatePoints'
 
 const Routesf = () => {
-  return( 
+  return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element = {<Home />} />
-        <Route path="/create-point" element = {<CreatePoint />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/create-point" element={<CreatePoint />} />
       </Routes>
     </BrowserRouter>
   )
