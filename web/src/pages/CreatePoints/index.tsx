@@ -1,14 +1,14 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { Link } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import api from '../../services/api';
 import axios from 'axios';
-
 import './styles.css'
-
 import logo from '../../assets/logo.svg'
+import { DefaultIcon } from '../../utils/leaflet_icon'
+
 
 //para array ou objeto, precisamos informar o tipo da variavel
 
@@ -130,7 +130,7 @@ const CreatePoint = () => {
     await api.post('points', data)
     alert('Ponto de coleta criado!')
   }
-  const position = [51.505, -0.09] as any
+  const position = [-27.2092052, -49.6401092] as any
   return (
     <div id="page-create-point">
       <header>
@@ -192,6 +192,7 @@ const CreatePoint = () => {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+            <Marker position={position} icon={DefaultIcon} />
           </MapContainer>
           <div className="field-group">
             <div className="field">
