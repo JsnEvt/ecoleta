@@ -1,10 +1,10 @@
 import React from 'react';
-import Home from '../Home';
 // import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'react-native';
 import { Roboto_400Regular, Roboto_500Medium } from '@expo-google-fonts/roboto'
 import { Ubuntu_700Bold, useFonts } from '@expo-google-fonts/ubuntu'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Routes from '../routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -20,7 +20,7 @@ export default function App() {
   return (
     <GestureHandlerRootView>
       <StatusBar barStyle={"dark-content"} backgroundColor={"transparent"} translucent />
-      <Home />
+      <Routes />
     </GestureHandlerRootView>
   )
 }
