@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
 import Constants from 'expo-constants'
 import { Feather as Icon } from '@expo/vector-icons'
@@ -6,6 +6,8 @@ import { useNavigation } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import api from '../services/api';
+
 
 type RootStackParamList = {
   Detail: undefined
@@ -16,10 +18,22 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
   'Detail'
 >;
 
+interface Item {
+  id: number
+  title: string
+  image_url: string
+}
 
 const Points = () => {
+  const [items, setItems] = useState<Item[]>([])
 
   const navigation = useNavigation<HomeScreenNavigationProp>()
+
+  useEffect(() => {
+    api.get('items').then(res => {
+      setItems(res.data)
+    })
+  }, [items])
 
   function handleNavigateBack() {
     navigation.goBack()
@@ -72,10 +86,13 @@ const Points = () => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 20 }}
         >
-          <TouchableOpacity style={styles.item} onPress={() => { }}>
-            <SvgUri width={42} height={42} uri="" />
-            <Text style={styles.itemTitle}>Lampadas</Text>
-          </TouchableOpacity>
+          {items.map(item => (
+            <TouchableOpacity key={String(item.id)} style={styles.item} onPress={() => { }}>
+              <SvgUri width={42} height={42} uri={item.image_url} />
+              <Text style={styles.itemTitle}>{item.title}</Text>
+            </TouchableOpacity>
+          ))}
+
         </ScrollView>
       </View>
     </>

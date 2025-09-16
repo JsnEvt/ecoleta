@@ -11,7 +11,7 @@ class ItemsController {
         id: item.id,
         title: item.title,
         // image_url: `http://localhost:3333/uploads/${item.image}` //funciona direto na web
-        image_url: `http://localhost:8081/uploads/${item.image}` //para buscar os itens de coleta para o aplicativo mobile (hack)
+        image_url: `http://192.168.0.39:3333/uploads/${item.image}` //para buscar os itens de coleta para o aplicativo mobile (hack)
       }
     })
 

@@ -42,9 +42,6 @@ app.use(routes)
 
 app.use('/uploads', express.static(path.resolve(__dirname, '../src/uploads')))
 
-
-
-
-
-
-app.listen(3333);
+app.listen(3333, '0.0.0.0', () => {
+  console.log('Server running on http://0.0.0.0:3333')
+});
