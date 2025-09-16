@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text, ScrollView, Image, AlertType, Alert } from 'react-native';
 import Constants from 'expo-constants'
 import { Feather as Icon } from '@expo/vector-icons'
 import { useNavigation } from 'expo-router';
@@ -7,6 +7,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import api from '../services/api';
+import * as Location from 'expo-location'
 
 
 type RootStackParamList = {
@@ -26,6 +27,35 @@ interface Item {
 
 const Points = () => {
   const [items, setItems] = useState<Item[]>([])
+  const [selectedItems, setSelectedItems] = useState<number[]>([])
+  const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0])
+  const mapRef = useRef<MapView>(null);
+
+  useEffect(() => {
+    async function loadPosition() {
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== 'granted') {
+        Alert.alert('Ooooops...', 'Precisamos de sua premissão para obter a localização')
+        return
+      }
+      const location = await Location.getCurrentPositionAsync({})
+      const { latitude, longitude } = location.coords
+
+      setInitialPosition([
+        latitude,
+        longitude
+      ])
+      if (mapRef.current) {
+        mapRef.current.animateToRegion({
+          latitude,
+          longitude,
+          latitudeDelta: 0.014,
+          longitudeDelta: 0.014,
+        });
+      }
+    }
+    loadPosition()
+  }, [])
 
   const navigation = useNavigation<HomeScreenNavigationProp>()
 
@@ -33,7 +63,7 @@ const Points = () => {
     api.get('items').then(res => {
       setItems(res.data)
     })
-  }, [items])
+  }, [])
 
   function handleNavigateBack() {
     navigation.goBack()
@@ -43,6 +73,14 @@ const Points = () => {
     navigation.navigate('Detail')
   }
 
+  function handleSelectedItem(id: number) {
+    const alreadySelected = selectedItems.includes(id);
+    if (alreadySelected) {
+      setSelectedItems(selectedItems.filter((item) => item !== id));
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
+  }
 
   return (
     <>
@@ -53,32 +91,37 @@ const Points = () => {
         <Text style={styles.title}>Bem vindo.</Text>
         <Text style={styles.description}>Encontre no mapa um ponto de coleta.</Text>
         <View style={styles.mapContainer}>
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: -8.2849575,
-              longitude: -35.9596266,
-              latitudeDelta: 0,
-              longitudeDelta: 0
-            }}
-          >
-            <Marker style={styles.mapMarker}
-              onPress={handleNavigateToDetail}
-              coordinate={{
-                latitude: -8.2849575,
-                longitude: -35.9596266,
+          {initialPosition[0] !== 0 && (
+            <MapView
+              ref={mapRef}
+              style={styles.map}
+              loadingEnabled={initialPosition[0] === 0}
+              region={{
+                latitude: initialPosition[0],
+                longitude: initialPosition[1],
+                latitudeDelta: 0.014,
+                longitudeDelta: 0.014
               }}
             >
-              <View style={styles.mapMarkerContainer}>
-                <Image style={styles.mapMarkerImage}
-                  source={{
-                    uri: 'https://plus.unsplash.com/premium_photo-1663099654523-d3862b7742cd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                  }} />
-                <Text style={styles.mapMarkerTitle}>Lixão</Text>
-              </View>
-            </Marker>
-          </MapView>
+              <Marker style={styles.mapMarker}
+                onPress={handleNavigateToDetail}
+                coordinate={{
+                  latitude: -8.2849575,
+                  longitude: -35.9596266,
+                }}
+              >
+                <View style={styles.mapMarkerContainer}>
+                  <Image style={styles.mapMarkerImage}
+                    source={{
+                      uri: 'https://plus.unsplash.com/premium_photo-1663099654523-d3862b7742cd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                    }} />
+                  <Text style={styles.mapMarkerTitle}>Lixão</Text>
+                </View>
+              </Marker>
+            </MapView>
+          )}
         </View>
+
       </View>
       <View style={styles.itemsContainer}>
         <ScrollView
@@ -87,7 +130,15 @@ const Points = () => {
           contentContainerStyle={{ paddingHorizontal: 20 }}
         >
           {items.map(item => (
-            <TouchableOpacity key={String(item.id)} style={styles.item} onPress={() => { }}>
+            <TouchableOpacity
+              key={String(item.id)}
+              style={[
+                styles.item,
+                selectedItems.includes(item.id) ? styles.selectedItem : {}
+              ]}
+              onPress={() => handleSelectedItem(item.id)}
+              activeOpacity={0.6}
+            >
               <SvgUri width={42} height={42} uri={item.image_url} />
               <Text style={styles.itemTitle}>{item.title}</Text>
             </TouchableOpacity>
