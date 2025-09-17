@@ -8,6 +8,7 @@ import { SvgUri } from 'react-native-svg'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import api from '../services/api';
 import * as Location from 'expo-location'
+import { useRoute } from '@react-navigation/native'
 
 
 type RootStackParamList = {
@@ -33,12 +34,23 @@ interface Points {
   longitude: number
 }
 
+interface Params {
+  uf: string
+  city: string
+}
+
 const Points = () => {
+
+
   const [items, setItems] = useState<Item[]>([])
   const [points, setPoints] = useState<Points[]>([])
   const [selectedItems, setSelectedItems] = useState<number[]>([])
   const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0])
   const mapRef = useRef<MapView>(null);
+
+  const route = useRoute()
+
+  const routeParams = route.params as Params
 
   useEffect(() => {
     async function loadPosition() {
@@ -77,14 +89,14 @@ const Points = () => {
   useEffect(() => {
     api.get('points', {
       params: {
-        city: 'Japaratinga',
-        uf: 'AL',
-        items: [1, 2]
+        city: routeParams.city,
+        uf: routeParams.uf,
+        items: selectedItems
       }
     }).then(response => {
       setPoints(response.data)
     })
-  }, [])
+  }, [selectedItems])
 
   function handleNavigateBack() {
     navigation.goBack()
