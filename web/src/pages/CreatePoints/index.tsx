@@ -9,6 +9,7 @@ import './styles.css';
 import logo from '../../assets/logo.svg';
 import { DefaultIcon } from '../../utils/leaflet_icon';
 import { UseSelectPosition } from '../../hooks/map_events';
+import MyDropzone from '../../components/Dropzone';
 
 interface Item {
   id: number;
@@ -154,6 +155,8 @@ const CreatePoint = () => {
         <h1>
           Cadastro do <br />ponto de coleta
         </h1>
+
+        <MyDropzone />
 
         <fieldset>
           <legend>
