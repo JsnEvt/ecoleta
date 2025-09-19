@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors'
 import path from 'path';
 import routes from './routes';
+import { errors } from 'celebrate'
+import { error } from 'console';
 
 
 const app = express();
@@ -39,6 +41,7 @@ app.use(routes)
 //   return res.json(filteredUsers);
 // });
 
+app.use(errors())
 
 app.use('/uploads', express.static(path.resolve(__dirname, '../src/uploads')))
 app.use('/uploads', express.static(path.resolve(__dirname, '../uploads')))
