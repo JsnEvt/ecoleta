@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   itemsContainer: {
     flexDirection: 'row',
     marginTop: 16,
-    marginBottom: 32,
+    marginBottom: 60,
   },
 
   item: {

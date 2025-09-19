@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   footer: {
-
+    marginBottom: 60
   },
 
   input: {
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     alignItems: 'center',
+    marginTop: 32
   },
 
   buttonIcon: {
