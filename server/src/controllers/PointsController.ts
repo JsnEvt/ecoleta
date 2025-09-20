@@ -6,23 +6,31 @@ class PointsController {
   async index(req: Request, res: Response) {
     const { city, uf, items } = req.query
 
-    const parsedItems = String(items)
-      .split(',')
-      .map(item => Number(item.trim()))
+    let parsedItems: number[] = []
 
-    const points = await knex('points')
+    if (items) {
+      parsedItems = String(items)
+        .split(',')
+        .map(item => Number(item.trim()))
+    }
+
+    const query = knex('points')
       .join('point_items', 'points.id', '=', 'point_items.point_id')
-      .whereIn('point_items.item_id', parsedItems)
       .where('city', String(city))
       .where('uf', String(uf))
       .distinct()
       .select('points.*')
 
+    if (parsedItems.length > 0) {
+      query.whereIn('point_items.item_id', parsedItems)
+    }
+
+    const points = await query
+
     const serializedPoints = points.map(point => {
       return {
         ...point,
-        image_url: `http://localhost:3333/uploads/${point.image}`
-        // image_url: `http://192.168.0.39:3333/uploads/${point.image}`
+        image_url: `http://192.168.0.39:3333/uploads/${point.image}`
       }
     })
 
@@ -40,8 +48,8 @@ class PointsController {
 
     const serializedPoint = {
       ...point,
-      image_url: `http://localhost:3333/uploads/${point.image}`
-      // image_url: `http://192.168.0.39:3333/uploads/${point.image}`
+      // image_url: `http://localhost:3333/uploads/${point.image}`
+      image_url: `http://192.168.0.39:3333/uploads/${point.image}`
     }
 
     //listando os itens que cada ponto de coleta, coleta.
