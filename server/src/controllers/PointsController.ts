@@ -3,8 +3,9 @@ import knex from '../database/connection';
 
 
 class PointsController {
-  async index(req: Request, res: Response) {
-    const { city, uf, items } = req.query
+
+  async index(request: Request, response: Response) {
+    const { city, uf, items } = request.query
 
     let parsedItems: number[] = []
 
@@ -34,7 +35,7 @@ class PointsController {
       }
     })
 
-    return res.json(serializedPoints)
+    return response.json(serializedPoints)
   }
 
 

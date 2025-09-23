@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
     "knex:migrate": "knex --knexfile knexfile.ts migrate:latest",
-    "knex:seed": "knex --knexfile knexfile.ts seed:run "
+    "knex:seed": "knex --knexfile knexfile.ts seed:run ",
+    "knex:updating": "ts-node ./node_modules/knex/bin/cli.js seed:run --knexfile knexfile.ts --specific=01_updating_extensions.ts"
   },
   "keywords": [],
   "author": "",

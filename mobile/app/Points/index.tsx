@@ -84,6 +84,7 @@ const Points = () => {
   useEffect(() => {
     api.get('items').then(res => {
       setItems(res.data)
+      console.log('ITEMS', res.data)
     })
   }, [])
 
@@ -92,7 +93,7 @@ const Points = () => {
       params: {
         city: routeParams.city,
         uf: routeParams.uf,
-        // items: selectedItems
+        items: selectedItems
       }
     }).then(response => {
       console.log('POINTS', response.data)
@@ -176,7 +177,7 @@ const Points = () => {
               onPress={() => handleSelectedItem(item.id)}
               activeOpacity={0.6}
             >
-              <SvgUri width={90} height={45} uri={item.image_url} />
+              <Image width={90} height={45} source={{ uri: item.image_url }} />
               <Text style={styles.itemTitle}>{item.title}</Text>
             </TouchableOpacity>
           ))}
