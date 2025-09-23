@@ -4,7 +4,6 @@ import Constants from 'expo-constants'
 import { Feather as Icon } from '@expo/vector-icons'
 import { useNavigation } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
-import { SvgUri } from 'react-native-svg'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import api from '../services/api';
 import * as Location from 'expo-location'
@@ -84,7 +83,6 @@ const Points = () => {
   useEffect(() => {
     api.get('items').then(res => {
       setItems(res.data)
-      console.log('ITEMS', res.data)
     })
   }, [])
 
@@ -177,7 +175,7 @@ const Points = () => {
               onPress={() => handleSelectedItem(item.id)}
               activeOpacity={0.6}
             >
-              <Image width={90} height={45} source={{ uri: item.image_url }} />
+              <Image width={30} height={45} source={{ uri: item.image_url }} />
               <Text style={styles.itemTitle}>{item.title}</Text>
             </TouchableOpacity>
           ))}
