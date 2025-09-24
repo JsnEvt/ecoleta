@@ -89,12 +89,12 @@ const Points = () => {
   useEffect(() => {
     api.get('points', {
       params: {
-        city: routeParams.city,
+        city: routeParams.city.trim(),
         uf: routeParams.uf,
         items: selectedItems
       }
     }).then(response => {
-      console.log('POINTS', response.data)
+      console.log('Points', response.data)
       setPoints(response.data)
     })
   }, [selectedItems])
