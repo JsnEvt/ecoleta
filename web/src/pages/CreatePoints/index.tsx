@@ -257,7 +257,7 @@ const CreatePoint = () => {
                 onClick={() => handleSelectItem(item.id)}
                 className={selectedItems.includes(item.id) ? 'selected' : ''}
               >
-                <img src={item.image_url} alt={item.title} />
+                <img src={item.image_url} alt={item.title} width={40} height={60} />
                 <span>{item.title}</span>
               </li>
             ))}
